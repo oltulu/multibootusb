@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Application
-Name=multibootusb
-Comment=Install multiple Linux Operating System on USB
+Name=MultiBootUSB
+Comment=Birkaç Linux İşletim Sistemini USB Belleğe kurar
 Icon=multibootusb
 Exec=multibootusb-pkexec
 Categories=System;
