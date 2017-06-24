@@ -312,10 +312,10 @@ Are you SURE you want to enable it?",
         if sys.platform.startswith("linux"):
             self.ui.statusbar.showMessage("Status: Sync is in progress...")
             os.sync()
-        self.ui.statusbar.showMessage("Status: Idle")
+        self.ui.statusbar.showMessage("Durum: Boşta")
         self.ui_disable_persistence()
         log(iso_name(config.image_path) + ' has been successfully installed.')
-        QtWidgets.QMessageBox.information(self, 'Finished...',
+        QtWidgets.QMessageBox.information(self, 'Tamamlandı...',
                                           iso_name(config.image_path) + ' has been successfully installed.')
         config.process_exist = None
         self.ui_enable_controls()
@@ -438,7 +438,7 @@ Are you SURE you want to enable it?",
         if sys.platform.startswith("linux"):
             self.ui.statusbar.showMessage("Status: Sync in progress...")
             os.sync()
-        self.ui.statusbar.showMessage("Status: Idle")
+        self.ui.statusbar.showMessage("Durum: Boşta")
         QtWidgets.QMessageBox.information(self, 'Uninstall Complete...',
                                           config.uninstall_distro_dir_name + ' has been successfully removed.')
         self.ui_enable_controls()
@@ -544,15 +544,15 @@ Are you SURE you want to enable it?",
         :return:
         """
         self.ui.progressbar.setValue(0)
-        self.ui.statusbar.showMessage("Status: Idle")
+        self.ui.statusbar.showMessage("Durum: Boşta")
         config.process_exist = None
 
         msgBox = QtWidgets.QMessageBox()
-        msgBox.setText("Image succesfully written to USB disk.")
-        msgBox.setInformativeText("Reboot to boot from USB or test it from <b>Boot ISO/USB</b> tab.");
+        msgBox.setText("USB diske görüntü başarıyla yazıldı")
+        msgBox.setInformativeText("Bilgisayarınızı USB bellekten başlatarak yazım işlemini test edebilirsiniz.");
         msgBox.setStandardButtons(QtWidgets.QMessageBox.Ok)
         msgBox.setIcon(QtWidgets.QMessageBox.Information)
-        msgBox.exec_()
+        msgBox.exec()
 
         self.ui_enable_controls()
 
@@ -562,35 +562,35 @@ Are you SURE you want to enable it?",
         :return:
         """
         self.ui.progressbar.setValue(0)
-        self.ui.statusbar.showMessage("Status: Idle")
+        self.ui.statusbar.showMessage("Durum: Boşta")
         # FIXME        self.ui.lineEdit_3.clear()
         self.ui.button_browse_image.setEnabled(False)
         self.ui.combo_drives.setEnabled(False)
         # FIXME self.ui.pushbtn_imager_refreshusb.setEnabled(False)
-        status_text = ("Status: Writing " + os.path.basename(config.image_path) + " to " + config.usb_disk)
+        status_text = ("Durum:" + os.path.basename(config.image_path) + " şuraya yazılıyor: " + config.usb_disk)
         self.ui.statusbar.showMessage(status_text)
 
     def dd_quit(self):
         self.ui.progressbar.setValue(0)
-        self.ui.statusbar.showMessage("Status: Idle")
+        self.ui.statusbar.showMessage("Durum: Boşta")
         self.ui.combo_drives.setEnabled(True)
         self.ui.button_browse_image.setEnabled(True)
-        QtWidgets.QMessageBox.information(self, 'Failed!', 'Failed writing image.')
+        QtWidgets.QMessageBox.information(self, 'Hata!', 'kalıp yazdırma hatası.')
 
     def dd_write(self):
         self.ui_disable_controls()
 
         if not config.usb_disk:
-            QtWidgets.QMessageBox.information(self, 'No USB disk selected',
-                                              'Please insert USB disk and click "Detect Drives".')
+            QtWidgets.QMessageBox.information(self, 'USB bellek seçilmedi',
+                                              'Lütfen USB bellek takın ve "Aygıtları Tara" butonuna tıklayın.')
             self.ui_enable_controls()
         elif not config.image_path:
-            QtWidgets.QMessageBox.information(self, 'No ISO selected', 'Please select an ISO.')
+            QtWidgets.QMessageBox.information(self, 'ISO seçilmedi', 'Lütfen bir ISO dosyası seçin.')
             self.ui_enable_controls()
         else:
             imager = Imager()
             if platform.system() == 'Linux' and config.usb_details['devtype'] == "partition":
-                gen.log('Selected device is a partition. Please select a disk from the drop down list')
+                gen.log('Seçilen cihaz bir bölüm. Lütfen açılır listeden bir disk seçin')
                 QtWidgets.QMessageBox.information(self, 'Incompatible device', 'Selected device (%s) is a partition!\n'
                                                                                'ISO must be written to a whole disk.'
                                                                                '\n\nPlease select a disk from the drop down list.' % config.usb_disk)
@@ -610,10 +610,10 @@ Are you SURE you want to enable it?",
                 #                                                                "image to disk...")
                 else:
                     reply = QtWidgets.QMessageBox.question \
-                        (self, 'Review selection',
-                         'Selected disk: %s\n' % config.usb_disk +
-                         'Selected image: %s\n\n' % os.path.basename(config.image_path) +
-                         'Proceed with writing image to disk?',
+                        (self, 'Seçimi İncele',
+                         'Seçilen disk: %s\n' % config.usb_disk +
+                         'Seçilen kalıp: %s\n\n' % os.path.basename(config.image_path) +
+                         'USB Belleğe yazmaya devam edilsin mi?',
                          QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No)
 
                     if reply == QtWidgets.QMessageBox.Yes:
@@ -678,8 +678,8 @@ class GuiInstallProgress(QtCore.QThread):
             self.update.emit(config.percentage)
             self.status.emit(config.status_text)
             if not self.thread.isFinished() and config.percentage == 100:
-                config.status_text = "Status: Please wait..."
-                self.status.emit("Status: Please wait...")
+                config.status_text = "Durum: Lütfen bekleyin..."
+                self.status.emit("Durum: Lütfen bekleyin...")
             time.sleep(0.1)
 
         self.update.emit(100)
